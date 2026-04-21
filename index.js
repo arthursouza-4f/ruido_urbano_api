@@ -25,6 +25,7 @@ app.use(globalLimiter);
 
 app.use("/api/users", require("./routes/UserRoutes"));
 app.use("/api/noises", require("./routes/NoiseRoutes"));
+app.use("/api/category", require("./routes/CategoryRoutes"));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
