@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('dns').setServers(['8.8.8.8', '1.1.1.1']);
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -10,7 +11,20 @@ app.use(helmet());
 app.use(express.json({ limit: '10kb' }));
 app.use(cors({ credentials: true, origin: process.env.CORS_ORIGIN }));
 
-app.use("/api/users", require("./routes/userRoutes"));
+const rateLimit = require('express-rate-limit');
+
+const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: { message: 'Muitas requisições. Tente novamente em 15 minutos.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+app.use(globalLimiter);
+
+app.use("/api/users", require("./routes/UserRoutes"));
+app.use("/api/noises", require("./routes/NoiseRoutes"));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
