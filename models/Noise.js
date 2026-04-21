@@ -12,6 +12,7 @@ const noiseSchema = new mongoose.Schema({
         coordinates: { type: [Number], required: true }
     },
     votes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    status: { type: String, enum: ['open', 'in_progress', 'resolved'], default: 'open' },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     createdAt: { type: Date, default: Date.now }
 });
